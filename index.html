@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,33 +8,51 @@
     <title>Text Based Adventure Game</title>
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
+
 <body>
-    <div  class="maintext boxstyle">
-        <div id="titleffect"></div>
-        
-        <div id=mainholder>
-            <p id="maincontent"></p>
+    <div class="content">
+        <div class="maintext boxstyle">
+            <div id="titleffect">
+
+            </div>
+
+            <div id=mainholder>
+                <p id="maincontent"></p>
+            </div>
+        </div>
+        <div class="userinput boxstyle">
+            <form>
+                <input id="submission" type="submit" style="display: none" />
+                <input id="textcontent" type="text">
+                <button id="inventorybutton">Inventory</button>
+                <button id="mapbutton">Map</button>
+            </form>
+            <div id="invdiv">
+                <p id="inventory" style="display: none;">
+
+                </p>
+            </div>
+            <div id="mapdiv">
+                <div id="map" style="display: none;">
+                    
+                </div>
+            </div>
+
         </div>
     </div>
-    <div class="userinput boxstyle">
-        <form>
-            <input id="submission" type="submit" style="display: none"/>
-            <input id="textcontent" type="text">
-            <button id="inventorybutton">Inventory</button>
-            <button id="mapbutton">Map</button>
-        </form>
-    </div>
 
 
-    <footer>Made by Evan Ebert 2021</footer>
     <div id="menuscreen" class="boxstyle">
         <h1>Gost</h1>
         <p class="smallertext">an adventure/mystery game set in 1920's america. <br>
-        go undercover to speakeasys to find clues and leads<br>
-        solve puzzles and find out the truth about the Michael Derrick gang.</p>
-        <h3>Press start to begin</h3>
+            go undercover to speakeasys to find clues and leads<br>
+            solve puzzles and find out the truth about the Michael Derrick gang.</p>
+        <h3>press start to begin</h3>
         <button id="start">Start</button>
     </div>
+
+    <footer>Made by Evan Ebert 2021</footer>
     <script src="assets/js/script.js"></script>
 </body>
+
 </html>

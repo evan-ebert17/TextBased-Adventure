@@ -4,6 +4,7 @@
 body {
     background-color: black;
     color: lightgreen;
+    height: 1vh;
 }
 
 .boxstyle {
@@ -26,4 +27,8 @@ body {
 #maincontent {
     text-align: center;
     width: 625px;
+}
+
+footer {
+    vertical-align: bottom;
 }
