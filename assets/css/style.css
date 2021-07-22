@@ -1,4 +1,17 @@
 * {
     font-family: monospace;
 }
+body {
+    background-color: black;
+    color: lightgreen;
+}
 
+.boxstyle {
+    
+    height: fit-content;
+    text-align: center; 
+};
+
+.smallertext {
+    font-size: 1vh;
+}
