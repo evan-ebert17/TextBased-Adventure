@@ -15,3 +15,15 @@ body {
 .smallertext {
     font-size: 1vh;
 }
+
+#mainholder {
+    display: flex;
+    justify-content: center;
+    align-items: center;   
+    text-align: center;
+}
+
+#maincontent {
+    text-align: center;
+    width: 625px;
+}
