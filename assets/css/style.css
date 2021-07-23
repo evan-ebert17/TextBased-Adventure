@@ -32,6 +32,17 @@ h1 {
     text-align: center;
 }
 
+#textcontent {
+    width: 50%;
+    height: 27px;
+}
+
+div div form button {
+    width: 15%;
+    height: 33px;
+    
+}
+
 #maincontent {
     text-align: center;
     width: 625px;
@@ -64,6 +75,7 @@ h1 {
 #githubLink {
     font-family: 'VT323', monospace;
     font-size: 2vh;
+    padding-left: 0%;
 }
 
 .leftcontent {
