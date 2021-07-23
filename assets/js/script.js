@@ -51,9 +51,9 @@ function runTopForm() {
 }
 
 //this is me trying to stop the submitting text from refreshing the page.
-//submitText.addEventListener('submit', function (event) {
-//    event.preventDefault();
-//});
+submitText.addEventListener('submit', function (event) {
+   event.preventDefault();
+});
 
 mainmenuButton.addEventListener('click', function (event) {
     event.preventDefault();

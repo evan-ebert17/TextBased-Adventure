@@ -10,7 +10,7 @@
 body {
     background-color: var(--bgcolor);
     color: var(--fontcolor);
-    height: 1vh;
+    /* height: 1vh; */
 }
 h1 {
     font-family: 'VT323', monospace;    
@@ -32,20 +32,64 @@ h1 {
     text-align: center;
 }
 
+
 #textcontent {
     width: 50%;
-    height: 27px;
+    height: 27px; 
+    font-size: 1.75vh;
+    color: var(--fontcolor);
+    background-color: var(--bgcolor);
+    border-style: outset;
+    border-width: 0px 3px 3px 0px;
+    border-color: grey;
+    text-shadow: -1px 1px 0 black,
+                          1px 1px 0 black,
+                         1px -1px 0 black,
+                        -1px -1px 0 black;
+}
+
+#textcontent:focus {
+    border-color: grey
+}
+
+#textcontent::placeholder {
+    font-size: 1.75vh;
+    color: var(--fontcolor);
+    text-shadow: -1px 1px 0 black,
+                          1px 1px 0 black,
+                         1px -1px 0 black,
+                        -1px -1px 0 black;
 }
 
 div div form button {
     width: 15%;
+    vertical-align: bottom;
     height: 33px;
-    
+    font-size: 1.9vh;
+    background-color: var(--bgcolor);
+    border-style: outset;
+    border-width: 0px 3px 3px 0px;
+    border-color: grey;
+    color: var(--fontcolor);
+    text-shadow: -1px 1px 0 black,
+                          1px 1px 0 black,
+                         1px -1px 0 black,
+                        -1px -1px 0 black;
+}
+
+div div form button:hover {
+    cursor: pointer;
+    background-color: #393939;
+}
+
+div div form button:focus {
+    background-color: var(--bgcolor);
 }
 
 #maincontent {
     text-align: center;
     width: 625px;
+    font-size: 1.75vh;
 }
 
 .map {
@@ -90,5 +134,8 @@ div div form button {
 }
 
 footer {
-    vertical-align: bottom;
+    position: absolute;
+    bottom: 0;
+    width: 99%;
+    height: 2.5rem;   
 }
