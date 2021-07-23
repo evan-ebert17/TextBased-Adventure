@@ -1,5 +1,6 @@
 :root {
     --fontcolor: #90ee90;
+    --bgcolor: #1F1F1F;
 }
 
 * {
@@ -7,13 +8,15 @@
 }
 
 body {
-    background-color: black;
+    background-color: var(--bgcolor);
     color: var(--fontcolor);
     height: 1vh;
 }
+h1 {
+    font-family: 'VT323', monospace;    
+}
 
 .boxstyle {
-    
     height: fit-content;
     text-align: center; 
 };
@@ -34,9 +37,44 @@ body {
     width: 625px;
 }
 
-#map {
-    width: 500px;
-    height: 500px;
+.map {
+    display: flex;
+    justify-content: center;
+    align-items: center;   
+    text-align: center;
+}
+
+.saveload {
+    background-color: var(--bgcolor);
+    border-style: none;
+    color: var(--fontcolor);
+    float: right;
+}
+
+.saveload:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+#companyHomepage {
+    font-family: 'VT323', monospace;
+    font-size: 2vh;
+}
+
+#githubLink {
+    font-family: 'VT323', monospace;
+    font-size: 2vh;
+}
+
+.leftcontent {
+    background-color: var(--bgcolor);
+    border-style: none;
+    color: var(--fontcolor);
+}
+
+.leftcontent:hover {
+    cursor: pointer;
+    text-decoration: underline;
 }
 
 footer {

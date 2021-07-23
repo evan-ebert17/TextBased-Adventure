@@ -13,7 +13,10 @@ var inventorycontent = document.getElementById("inventory");
 var inventoryDiv = document.getElementById("invdiv");
 var inventoryButton = document.getElementById("inventorybutton");
 
-var maps = require('.images.js')
+//const maps = require('.images.js');
+const houseMap = document.createElement('img');
+houseMap.src = "assets/images/roomHouseTest.png";
+
 var mapDiv = document.getElementById("mapdiv");
 var mapContent = document.getElementById("map");
 var mapButton = document.getElementById('mapbutton');
@@ -66,7 +69,8 @@ function hideMap() {
 
 mapButton.addEventListener('click', function (event) {
     event.preventDefault();
-    mapContent = maps.houseMap;
+    mapContent.classList.add('.map')
+    mapContent.appendChild(houseMap);
     hideMap();
 });
 
