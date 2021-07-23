@@ -1,3 +1,4 @@
+
 var menuDiv = document.getElementById("menuscreen");
 var mainmenuButton = document.getElementById("start");
 
@@ -12,6 +13,7 @@ var inventorycontent = document.getElementById("inventory");
 var inventoryDiv = document.getElementById("invdiv");
 var inventoryButton = document.getElementById("inventorybutton");
 
+var maps = require('.images.js')
 var mapDiv = document.getElementById("mapdiv");
 var mapContent = document.getElementById("map");
 var mapButton = document.getElementById('mapbutton');
@@ -64,7 +66,7 @@ function hideMap() {
 
 mapButton.addEventListener('click', function (event) {
     event.preventDefault();
-    
+    mapContent = maps.houseMap;
     hideMap();
 });
 
