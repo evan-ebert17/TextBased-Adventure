@@ -1,9 +1,14 @@
+:root {
+    --fontcolor: #90ee90;
+}
+
 * {
     font-family: monospace;
 }
+
 body {
     background-color: black;
-    color: lightgreen;
+    color: var(--fontcolor);
     height: 1vh;
 }
 
@@ -27,6 +32,11 @@ body {
 #maincontent {
     text-align: center;
     width: 625px;
+}
+
+#map {
+    width: 500px;
+    height: 500px;
 }
 
 footer {
