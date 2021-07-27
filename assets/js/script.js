@@ -1,6 +1,8 @@
 
 var menuDiv = document.getElementById("menuscreen");
 var mainmenuButton = document.getElementById("start");
+var saveBtn = document.getElementById("savebtn");
+var loadBtn = document.getElementById("loadbtn")
 
 var formEl = document.getElementById('form');
 var mainTextContentDiv = document.querySelector(".maintext");
@@ -10,7 +12,7 @@ var mainText = document.getElementById("maincontent");
 var userText = document.getElementById("textcontent");
 var submitText = document.getElementById("submission");
 
-var inventorycontent = document.getElementById("inventory");
+var inventorycontentText = document.getElementById("inventory");
 var inventoryDiv = document.getElementById("invdiv");
 var inventoryButton = document.getElementById("inventorybutton");
 
@@ -22,6 +24,8 @@ var mapDiv = document.getElementById("mapdiv");
 var mapContent = document.getElementById("map");
 var mapButton = document.getElementById('mapbutton');
 
+var savedLocal = localStorage.setItem('save', mainText.textContent)
+var loadLocal = localStorage.getItem('save');
 //accessing prompts/rooms
 //give every prompt in the game a value (1-737);
 //when player enters a command they will go to a value and it will pull up the corresponding text box
@@ -32,7 +36,7 @@ const down = - 2;
 const left = + 1;
 const right = - 1;
 
-var allPrompts = [];
+var savedArray = [];
 var housePrompts = [
     {
         room: "you wake up in your bed, head slightly aching from last nights saunter through a few local places. as it stands, your name is Daniel and you are a detective. currently, you are on the case of the Michael Derrick gang, a notorius crime syndicate that has been pedaling drugs and alchohol. it is currently bright outside on a sunday afternoon.",
@@ -84,10 +88,31 @@ var housePrompts = [
         room: "front door",
         roomelVal: -6,
     },
-]
+];
 
-let currentPrompt = housePrompts[pIndex];
+//holds all of the data for the games states, for example, currentMapLocation refers to the position of spaces on the map that are part of a numbered grid,
+//so when you hit -8 you have essentially left the house and therefore would need to update the state to "outside" and not "house"
+//current location starts at 0 because of the up, left, right, down adding to it to change the value of it so that it can equal roomelVal to target a room description
+var currentState = {
+    inventory: [''],
+    currentMapLocation: [-8, 9, 56],
+    currentLocation: [0]
+}
+
+//arrays containing all of the items in a given area, change this to by room probably so that on 
+//game load you cannot just type "get x" and get it even though you're not in the correct room
+var gameItems = {
+    house: ['plate', 'medicine', 'dog']
+    ,
+    street: ['']
+    //more later
+}
+
+var inventorycontent = currentState.inventory;
+
+let currentPrompt = housePrompts//[pIndex];
 let lastPara;
+
 let title;
 function createTitle() {
     title = document.createElement('h1');
@@ -96,19 +121,23 @@ function createTitle() {
     titleffect.append(title);
 }
 formEl.addEventListener('submit', function (event) {
+    console.log(userText.value)
     if (event) {
-        userText.value = '';
         event.preventDefault();
     }
+    pickedUpItem();
     promptCycling();
+    userText.value = '';
 });
+
 mainmenuButton.addEventListener('click', function (event) {
     event.preventDefault();
     menuDiv.innerHTML = '';
     createTitle();
     runTopForm();
-    mainText.textContent = currentPrompt.room;
-})
+    mainText.textContent = currentPrompt[pIndex].room;
+});
+
 function runTopForm() {
     if (formEl.style.display === "none") {
         formEl.style.display = "block";
@@ -116,6 +145,7 @@ function runTopForm() {
         formEl.style.display = "none";
     }
 }
+
 function hideMap() {
     if (mapContent.style.display === "none") {
         mapContent.style.display = "block";
@@ -123,19 +153,36 @@ function hideMap() {
         mapContent.style.display = "none";
     }
 }
+
+//function that states if the user types the command get followed by an item inside the room they are in and it is 'get-able'
+//they pick it up and the item gets pushed to the inventory up in the currentState object
+function pickedUpItem() {
+    if (userText.value === `get medicine`) {
+        userText.value = `got ${gameItems.house[1]}`
+        gameItemsHolder.house[1].push(currentState.inventory);
+        console.log(currentState.inventory);
+    };
+}
+//when the inventory button is clicked, if you have nothing it displays "ya got..." otherwise it will display whatever content you have in the inventory array
 inventoryButton.addEventListener('click', function (event) {
-    inventorycontent.textContent = '';
     event.preventDefault();
-    inventorycontent.textContent = "bomb, rope, gun.";
+    inventorycontent.textContent = '';
+    if (inventorycontent.textContent === '' && event) {
+        inventorycontentText.textContent = "Ya got nothin', champ."
+    } else {
+        inventorycontentText.textContent = inventorycontent;
+    }
     hideInv();
 });
+
 function hideInv() {
-    if (inventorycontent.style.display === "none") {
-        inventorycontent.style.display = "block";
+    if (inventorycontentText.style.display === "none") {
+        inventorycontentText.style.display = "block";
     } else {
-        inventorycontent.style.display = "none";
+        inventorycontentText.style.display = "none";
     }
 }
+
 mapButton.addEventListener('click', function (event) {
     event.preventDefault();
     mapContent.classList.add('.map')
@@ -143,6 +190,7 @@ mapButton.addEventListener('click', function (event) {
     hideMap();
     indexCubeChar();
 });
+//basically the "player", it is a cube (a button element) that will track to the players room, therefore displaying the players location on the map
 function indexCubeChar() {
     const indexCubeChar = document.createElement('button');
     if (mapContent.style.display === "block") {
@@ -153,28 +201,62 @@ function indexCubeChar() {
         return;
     }
 };
+//room position
+var roomPos = currentState.currentLocation;
 
 function promptCycling() {
     //when I input text and enter, it takes the input and goes to a positon in the array based on the input
     //additionally, once I am at the new point in the array I can go back and that the position from the array I have choices that I would not have otherwise
-    currentPrompt = housePrompts[pIndex];
-    console.log(currentPrompt);
-    mainText.textContent = currentPrompt.room;
-    for (let i = 0; i < currentPrompt.length; i++) {
-        const houseArray = currentPrompt
-        console.log(houseArray);
+    //target roomelVal in the object so that when it reads an objects uniqure roomelVal it sets the text content to whatever that objects room: is.
 
+    if (userText.value === `go up`) {
+        up += roomPos;
     }
+    else if (userText.value === `go down`) {
+        down += roomPos;
+    }
+    else if (userText.value === `go left`) {
+        left + roomPos;
+        console.log(left + roomPos);
+    }
+    else if (userText.value === `go right`) {
+        right += roomPos;
+    }
+    else {
+        userText.textContent = "that's not a command! type !help for available commands."
+    };
 
+    for (let i = 0; i < currentPrompt.length; i++) {
+        const selectedArrayPos = currentPrompt[pIndex];
+        if (roomPos === currentPrompt.roomelVal) {
+            mainText.textContent = selectedArrayPos.room;
+        }
+    }
 };
+
+
+//this is just whenever you type "help" or "commands", it will bring up a list of all the commands in the game.
 function altCommands() {
-    if (userText === "help" || userText === "commands") {
+    if (userText.value === "help" || userText.value === "commands") {
+        savedLocal
         mainText.textContent = '';
         //this is me thinking about appending a paragraph of just help information
-        // var commandlist = document.createElement('p');
-        // commandlist.classList.add(".smallertext");
-        // commandlist.textContent = "Commands:"
-        // mainholder.append(commandlist);
-        mainText.textContent = "help: displays this page, look: inspects a thing you specify, north or up/south or down/west or left/east or right: moves you in said direction, talk: talk to a person..."
+        mainText.textContent = "help: displays this page, look: inspects a thing you specify, north or up/south or down/west or left/east or right: moves you in said direction, talk: talk to a person... dismiss this by typing OK"
+        if (userText.value === "OK" || "ok" || "Ok") {
+            mainText.textContent = loadLocal;
+        }
+
     }
+
 }
+//save button
+saveBtn.addEventListener('click', function (event) {
+    event.preventDefault();
+    savedLocal;
+})
+//load button
+loadBtn.addEventListener('click', function (event) {
+    event.preventDefault();
+    lastPara = localStorage.getItem('save');
+    mainText.textContent = lastPara;
+})
