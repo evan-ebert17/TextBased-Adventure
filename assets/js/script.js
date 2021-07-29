@@ -31,32 +31,32 @@ var loadLocal = localStorage.getItem('save');
 //when player enters a command they will go to a value and it will pull up the corresponding text box
 //to save the game, it just stores this value in localstorage and then whenever player loads, it goes to the last saved value-prompt
 let pIndex = 0;
-const up = + 2;
-const down = - 2;
-const left = + 1;
-const right = - 1;
+var up = + 2;
+var down = - 2;
+var left = + 1;
+var right = - 1;
 
 var savedArray = [];
 var grid = [
     {
-        room: 'Bedroom',
+        room: 'bedroom',
         roomelVal: 0,
-        ifrepeated: 0,
+        // ifrepeated: 0,
     },
     {
-        room: 'this is your bathroom',
+        room: 'bathroom',
         roomelVal: -2,
     },
     {
-        room: 'this is bedroom-storage hallway',
+        room: 'bedroomStorageHallway',
         roomelVal: 1,
     },
     {
-        room: 'this is your front attic',
+        room: 'frontAttic',
         roomelVal: 4,
     },
     {
-        room: 'this is your back attic',
+        room: 'backAttic',
         roomelVal: 5,
     },
     {
@@ -65,30 +65,75 @@ var grid = [
     },
     {
         room: "office",
-        roomelVal: 0,
-        ifrepeated: 5,
+        roomelVal: 3,
+        // ifrepeated: 5,
     },
     {
-        room: "hall office",
+        room: "hallOffice",
         roomelVal: -1,
     },
     {
-        room: "hall living",
+        room: "hallLiving",
         roomelVal: -3,
     },
     {
-        room: "livingroom",
+        room: "livingRoom",
         roomelVal: -4,
     },
     {
-        room: 'this is your kitchen',
+        room: 'kitchen',
         roomelVal: -5,
     },
     {
-        room: "front door",
+        room: "frontDoor",
         roomelVal: -6,
     },
 ];
+
+const prompts = {
+    street: {
+        mainstreet: {
+            disc: "you are on the main road"
+        }
+    },
+    housePrompts: {
+
+        kitchen: {
+            disc: 'your kitchen'
+        },
+        bedroom: {
+            disc: 'you wake up in your bed, head slightly aching from last nights saunter through a few local places. as it stands, your name is Daniel and you are a detective. currently, you are on the case of the Michael Derrick gang, a notorius crime syndicate that has been pedaling drugs and alchohol. it is currently bright outside on a sunday afternoon.',
+        },
+        bedroomStorageHallway: {
+            disc: 'you are in the hall next to the bedroom'
+        },
+        bathroom: {
+            disc: 'this is your bathroom'
+        },
+        frontAttic: {
+            disc: 'this is the front portion of your attic'
+        },
+        backAttic: {
+            disc: 'and this is the back portion.'
+        },
+        storage: {
+            disc: 'you are in a storage room in your house'
+        },
+        office: {
+            disc: 'you are in your home office.'
+        },
+        hallOffice: {
+            disc: 'you are in the hallway in between your home office and your @@@@'
+        },
+        livingRoom: {
+            disc: 'this is your living room.'
+        },
+        frontDoor: {
+            disc: 'you are at the front door.'
+        },
+    }
+}
+
 
 //holds all of the data for the games states, for example, currentMapLocation refers to the position of spaces on the map that are part of a numbered grid,
 //so when you hit -8 you have essentially left the house and therefore would need to update the state to "outside" and not "house"
@@ -96,8 +141,9 @@ var grid = [
 var currentState = {
     locationState: ['house', 'street', 'work', 'lair'],
     inventory: [''],
+    //-8 = you're on the street
     currentMapLocation: [-8, 9, 56],
-    currentLocation: 0,
+    currentLocation: [0],
 }
 
 //arrays containing all of the items in a given area, change this to by room probably so that on 
@@ -115,7 +161,9 @@ var gameItems = {
     //more later
 }
 
-gameItems['house']['kitchen']
+var roomPos = currentState.currentLocation;
+let reducedArray;
+//gameItems['house']['kitchen']
 
 var inventorycontent = currentState.inventory;
 
@@ -137,8 +185,10 @@ formEl.addEventListener('submit', function (event) {
     }
     pickedUpItem();
     promptCycling();
-    const roomWeRIn = giveMeRoom(roomPos)
-    const housePropmptForthisRoom = prompts.housePrompts[roomWeRIn].disc
+    const roomAreIn = giveMeRoom(roomPos)
+    const housePromptForThisRoom = prompts.housePrompts[roomAreIn].disc
+
+    mainText.textContent = housePromptForThisRoom;
 
 
     userText.value = '';
@@ -216,7 +266,6 @@ function indexCubeChar() {
     }
 };
 //room position
-var roomPos = currentState.currentLocation;
 
 function promptCycling() {
     //when I input text and enter, it takes the input and goes to a positon in the array based on the input
@@ -224,71 +273,59 @@ function promptCycling() {
     //target roomelVal in the object so that when it reads an objects uniqure roomelVal it sets the text content to whatever that objects room: is.
 
     if (userText.value === `go up`) {
-        up += roomPos;
+        up + roomPos[0];
+        roomPos.push(up + roomPos[0])
+        reducedArray = roomPos.reduce((a, b) => (1 * a) + (1 * b))
     }
     else if (userText.value === `go down`) {
-        down += roomPos;
+        down + roomPos[0];
+        roomPos.push(down + roomPos[0])
+        reducedArray = roomPos.reduce((a, b) => (1 * a) + (1 * b))
     }
     else if (userText.value === `go left`) {
-        left + roomPos;
-        console.log(left + roomPos);
+        left + roomPos[0];
+        roomPos.push(left + roomPos[0])
+        reducedArray = roomPos.reduce((a, b) => (1 * a) + (1 * b))
     }
     else if (userText.value === `go right`) {
-        right += roomPos;
+        right + roomPos[0];
+        roomPos.push(right + roomPos[0])
+        reducedArray = roomPos.reduce((a, b) => (1 * a) + (1 * b))
     }
     else {
         userText.textContent = "that's not a command! type !help for available commands."
     };
 
     for (let i = 0; i < grid.length; i++) {
-        //const selectedArrayPos = currentPrompt[pIndex];
-        const roomWeRIn = giveMeRoom(roomPos)
-        const itemsForHouse = gameItems['house'][roomWeRIn]
+        //roomAreIn uses the function giveMeRoom to find out what room we are currently in (string)
+        reducedArray = roomPos.reduce((a, b) => (1 * a) + (1 * b));
+        const roomAreIn = giveMeRoom(reducedArray);
+        const itemsForHouse = gameItems['house'][roomAreIn];
 
-        //const streetPrompts = prompts.street[roomWeRIn].disc
+        //const streetPrompts = prompts.street[roomAreIn].disc
 
-        const housePropmptForthisRoom = prompts.housePrompts[roomWeRIn].disc
-        mainText.textContent = housePropmptForthisRoom
+        const housePromptForThisRoom = prompts.housePrompts[roomAreIn].disc
         // if (roomPos === currentPrompt.roomelVal) {
         //     mainText.textContent = selectedArrayPos.room;
         // }
     }
 };
 
-const prompts = {
-    street: {
-        mainstreet: {
-            disc: "you are on the main road"
-        }
-    },
-    housePrompts: {
+//function addNums(total, num) {
+//     return total + num;
+// }
 
-        kitchen: {
-            names: 'bug',
-            props: ' Bug is here oh no!'
-        },
-        bedroom: {
-            disc: 'you wake up in your bed, head slightly aching from last nights saunter through a few local places. as it stands, your name is Daniel and you are a detective. currently, you are on the case of the Michael Derrick gang, a notorius crime syndicate that has been pedaling drugs and alchohol. it is currently bright outside on a sunday afternoon.',
-        },
-        hallBedroom: {
-            disc: 'you are in the hall next to the bedroom'
-        }
-    }
-}
 
 function giveMeRoom(roomPos) {
     let room;
 
     for (let i = 0; i < grid.length; i++) {
-
-
-        if (grid[i].roomelVal === roomPos) {
+        if (grid[i].roomelVal === reducedArray) {
             room = grid[i].room
         }
-
     }
+    console.log(room)
     return room
-
 }
 
 
