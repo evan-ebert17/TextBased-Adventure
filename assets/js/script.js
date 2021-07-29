@@ -267,6 +267,12 @@ function indexCubeChar() {
 };
 //room position
 
+function commandCheck() {
+    if(userText.value !== `help` || `command` || `commands`|| `inventory` || `map`) {
+        userText.value = `that's not a command! type !help for available commands.`
+    }
+}
+
 function promptCycling() {
     //when I input text and enter, it takes the input and goes to a positon in the array based on the input
     //additionally, once I am at the new point in the array I can go back and that the position from the array I have choices that I would not have otherwise
@@ -328,8 +334,17 @@ function giveMeRoom(roomPos) {
     return room
 }
 
-
-
+function errorHandling() {
+    const roomAreIn = giveMeRoom(reducedArray);
+    if(prompts.housePrompts[roomAreIn].disc === undefined) {
+        userText.value = "you ran into a wall, fool"
+        return;
+        }
+    //else if(prompts.street[roomAreIn].disc === undefined) {
+    //     userText.value = "you ran out of street, fool"
+    //     return;
+    // }
+}
 
 //this is just whenever you type "help" or "commands", it will bring up a list of all the commands in the game.
 function altCommands() {
