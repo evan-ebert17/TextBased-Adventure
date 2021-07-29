@@ -16,7 +16,6 @@ var inventorycontentText = document.getElementById("inventory");
 var inventoryDiv = document.getElementById("invdiv");
 var inventoryButton = document.getElementById("inventorybutton");
 
-//const maps = require('.images.js');
 const houseMap = document.createElement('img');
 houseMap.src = "assets/images/roomHouseTest.png";
 
@@ -154,8 +153,15 @@ var currentState = {
     //-8 = you're on the street
     currentMapLocation: [-8, 9, 56],
     currentLocation: [0],
+    lastLocation: []
 }
 
+var lastPos = currentState.lastLocation;
+function checkLastPosLength() {
+    if(lastPos.length > 1 && userText.value !== 'back') {
+        lastPos.shift();
+}
+}
 //arrays containing all of the items in a given area, change this to by room probably so that on 
 //game load you cannot just type "get x" and get it even though you're not in the correct room
 var gameItems = {
@@ -173,7 +179,6 @@ var gameItems = {
 
 var roomPos = currentState.currentLocation;
 let reducedArray;
-//gameItems['house']['kitchen']
 
 var inventorycontent = currentState.inventory;
 
@@ -194,12 +199,13 @@ formEl.addEventListener('submit', function (event) {
         event.preventDefault();
     }
     pickedUpItem();
+    checkLastPosLength();
     promptCycling();
     const roomAreIn = giveMeRoom(roomPos)
     const housePromptForThisRoom = prompts.housePrompts[roomAreIn].disc
 
     mainText.textContent = housePromptForThisRoom;
-
+    console.log(lastPos)
 
     userText.value = '';
 });
@@ -282,7 +288,21 @@ function commandCheck() {
         userText.value = `that's not a command! type !help for available commands.`
     }
 }
-
+function back() {
+    if(lastPos[0] === 'up') {
+        console.log('hello')
+        roomPos.push(-2 + roomPos[0])
+    }
+    if(lastPos[0] === 'down') {
+        roomPos.push(+2 + roomPos[0])
+    }
+    if(lastPos[0] === 'left') {
+        roomPos.push(-1 + roomPos[0])
+    }
+    if(lastPos[0] === 'right') {
+        roomPos.push(+1 + roomPos[0])
+    }
+}
 function promptCycling() {
     //when I input text and enter, it takes the input and goes to a positon in the array based on the input
     //additionally, once I am at the new point in the array I can go back and that the position from the array I have choices that I would not have otherwise
@@ -292,16 +312,19 @@ function promptCycling() {
         up + roomPos[0];
         roomPos.push(up + roomPos[0])
         reducedArray = roomPos.reduce((a, b) => (1 * a) + (1 * b))
+        lastPos.push('up')
     }
     else if (userText.value === `go down` || userText.value === `down` || userText.value === `go south` || userText.value === `south`) {
         down + roomPos[0];
         roomPos.push(down + roomPos[0])
         reducedArray = roomPos.reduce((a, b) => (1 * a) + (1 * b))
+        lastPos.push('down')
     }
     else if (userText.value === `go left` || userText.value === `left` || userText.value === `go west` || userText.value === `west`) {
         left + roomPos[0];
         roomPos.push(left + roomPos[0])
         reducedArray = roomPos.reduce((a, b) => (1 * a) + (1 * b))
+        lastPos.push('left')
     }
     else if (userText.value === `go right` || userText.value === `right` || userText.value === `go east` || userText.value === `east`) {
         if (roomPos === -5 && userText.value === `go right`) {
@@ -310,8 +333,9 @@ function promptCycling() {
         right + roomPos[0];
         roomPos.push(right + roomPos[0])
         reducedArray = roomPos.reduce((a, b) => (1 * a) + (1 * b))
-        //} //else if(userText.value === `go back` || `back`) {
-        //mainText.textContent = LastPara;
+        lastPos.push('right')
+    } else if (userText.value === `go back` || `back`) {
+        back()
     } else {
         userText.textContent = "that's not a command! type !help for available commands."
     };
