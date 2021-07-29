@@ -37,9 +37,9 @@ const left = + 1;
 const right = - 1;
 
 var savedArray = [];
-var housePrompts = [
+var grid = [
     {
-        room: "you wake up in your bed, head slightly aching from last nights saunter through a few local places. as it stands, your name is Daniel and you are a detective. currently, you are on the case of the Michael Derrick gang, a notorius crime syndicate that has been pedaling drugs and alchohol. it is currently bright outside on a sunday afternoon.",
+        room: 'Bedroom',
         roomelVal: 0,
         ifrepeated: 0,
     },
@@ -94,23 +94,32 @@ var housePrompts = [
 //so when you hit -8 you have essentially left the house and therefore would need to update the state to "outside" and not "house"
 //current location starts at 0 because of the up, left, right, down adding to it to change the value of it so that it can equal roomelVal to target a room description
 var currentState = {
+    locationState: ['house', 'street', 'work', 'lair'],
     inventory: [''],
     currentMapLocation: [-8, 9, 56],
-    currentLocation: [0]
+    currentLocation: 0,
 }
 
 //arrays containing all of the items in a given area, change this to by room probably so that on 
 //game load you cannot just type "get x" and get it even though you're not in the correct room
 var gameItems = {
-    house: ['plate', 'medicine', 'dog']
+    house: {
+        kitchen: ['medicine', 'plate'],
+        bathroom: ['medicine'],
+        storage: ['tape', 'rope', 'gun'],
+        attic: ['box'],
+        livingRoom: ['newspaper', 'matches'],
+    }
     ,
-    street: ['']
+    street: {},
     //more later
 }
 
+gameItems['house']['kitchen']
+
 var inventorycontent = currentState.inventory;
 
-let currentPrompt = housePrompts//[pIndex];
+
 let lastPara;
 
 let title;
@@ -120,6 +129,7 @@ function createTitle() {
     var titleffect = document.getElementById('titleffect');
     titleffect.append(title);
 }
+
 formEl.addEventListener('submit', function (event) {
     console.log(userText.value)
     if (event) {
@@ -127,6 +137,10 @@ formEl.addEventListener('submit', function (event) {
     }
     pickedUpItem();
     promptCycling();
+    const roomWeRIn = giveMeRoom(roomPos)
+    const housePropmptForthisRoom = prompts.housePrompts[roomWeRIn].disc
+
+
     userText.value = '';
 });
 
@@ -135,7 +149,7 @@ mainmenuButton.addEventListener('click', function (event) {
     menuDiv.innerHTML = '';
     createTitle();
     runTopForm();
-    mainText.textContent = currentPrompt[pIndex].room;
+    mainText.textContent = prompts.housePrompts.bedroom.disc;
 });
 
 function runTopForm() {
@@ -158,7 +172,7 @@ function hideMap() {
 //they pick it up and the item gets pushed to the inventory up in the currentState object
 function pickedUpItem() {
     if (userText.value === `get medicine`) {
-        userText.value = `got ${gameItems.house[1]}`
+        userText.value = `got ${gameItems.house}`
         gameItemsHolder.house[1].push(currentState.inventory);
         console.log(currentState.inventory);
     };
@@ -226,13 +240,58 @@ function promptCycling() {
         userText.textContent = "that's not a command! type !help for available commands."
     };
 
-    for (let i = 0; i < currentPrompt.length; i++) {
-        const selectedArrayPos = currentPrompt[pIndex];
-        if (roomPos === currentPrompt.roomelVal) {
-            mainText.textContent = selectedArrayPos.room;
-        }
+    for (let i = 0; i < grid.length; i++) {
+        //const selectedArrayPos = currentPrompt[pIndex];
+        const roomWeRIn = giveMeRoom(roomPos)
+        const itemsForHouse = gameItems['house'][roomWeRIn]
+
+        //const streetPrompts = prompts.street[roomWeRIn].disc
+
+        const housePropmptForthisRoom = prompts.housePrompts[roomWeRIn].disc
+        mainText.textContent = housePropmptForthisRoom
+        // if (roomPos === currentPrompt.roomelVal) {
+        //     mainText.textContent = selectedArrayPos.room;
+        // }
     }
 };
+
+const prompts = {
+    street: {
+        mainstreet: {
+            disc: "you are on the main road"
+        }
+    },
+    housePrompts: {
+
+        kitchen: {
+            names: 'bug',
+            props: ' Bug is here oh no!'
+        },
+        bedroom: {
+            disc: 'you wake up in your bed, head slightly aching from last nights saunter through a few local places. as it stands, your name is Daniel and you are a detective. currently, you are on the case of the Michael Derrick gang, a notorius crime syndicate that has been pedaling drugs and alchohol. it is currently bright outside on a sunday afternoon.',
+        },
+        hallBedroom: {
+            disc: 'you are in the hall next to the bedroom'
+        }
+    }
+}
+
+function giveMeRoom(roomPos) {
+    let room;
+
+    for (let i = 0; i < grid.length; i++) {
+
+
+        if (grid[i].roomelVal === roomPos) {
+            room = grid[i].room
+        }
+
+    }
+    return room
+
+}
+
+
 
 
 //this is just whenever you type "help" or "commands", it will bring up a list of all the commands in the game.
