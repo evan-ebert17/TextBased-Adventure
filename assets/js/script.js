@@ -158,9 +158,9 @@ var currentState = {
 
 var lastPos = currentState.lastLocation;
 function checkLastPosLength() {
-    if(lastPos.length > 1 && userText.value !== 'back') {
+    if (lastPos.length > 1 && userText.value !== 'back') {
         lastPos.shift();
-}
+    }
 }
 //arrays containing all of the items in a given area, change this to by room probably so that on 
 //game load you cannot just type "get x" and get it even though you're not in the correct room
@@ -195,19 +195,27 @@ function createTitle() {
 
 formEl.addEventListener('submit', function (event) {
     console.log(userText.value)
-    if (event) {
-        event.preventDefault();
+    event.preventDefault();
+    if (userText.value === '') {
+        return;
+    } else {
+
+        if (userText.value === 'help' || userText.value === 'commands') {
+            altCommands()
+        }
+        if (userText.value === 'get') {
+            pickedUpItem();
+        }
+        checkLastPosLength();
+        promptCycling();
+        const roomAreIn = giveMeRoom(roomPos)
+        const housePromptForThisRoom = prompts.housePrompts[roomAreIn].disc
+
+        mainText.textContent = housePromptForThisRoom;
+        console.log(lastPos)
+
+        userText.value = '';
     }
-    pickedUpItem();
-    checkLastPosLength();
-    promptCycling();
-    const roomAreIn = giveMeRoom(roomPos)
-    const housePromptForThisRoom = prompts.housePrompts[roomAreIn].disc
-
-    mainText.textContent = housePromptForThisRoom;
-    console.log(lastPos)
-
-    userText.value = '';
 });
 
 mainmenuButton.addEventListener('click', function (event) {
@@ -289,17 +297,16 @@ function commandCheck() {
     }
 }
 function back() {
-    if(lastPos[0] === 'up') {
-        console.log('hello')
+    if (lastPos[0] === 'up') {
         roomPos.push(-2 + roomPos[0])
     }
-    if(lastPos[0] === 'down') {
+    if (lastPos[0] === 'down') {
         roomPos.push(+2 + roomPos[0])
     }
-    if(lastPos[0] === 'left') {
+    if (lastPos[0] === 'left') {
         roomPos.push(-1 + roomPos[0])
     }
-    if(lastPos[0] === 'right') {
+    if (lastPos[0] === 'right') {
         roomPos.push(+1 + roomPos[0])
     }
 }
@@ -335,7 +342,7 @@ function promptCycling() {
         reducedArray = roomPos.reduce((a, b) => (1 * a) + (1 * b))
         lastPos.push('right')
     } else if (userText.value === `go back` || `back`) {
-        back()
+        back();
     } else {
         userText.textContent = "that's not a command! type !help for available commands."
     };
@@ -355,9 +362,6 @@ function promptCycling() {
     }
 };
 
-//function addNums(total, num) {
-//     return total + num;
-// }
 
 
 function giveMeRoom(roomPos) {
@@ -386,17 +390,13 @@ function errorHandling() {
 
 //this is just whenever you type "help" or "commands", it will bring up a list of all the commands in the game.
 function altCommands() {
-    if (userText.value === "help" || userText.value === "commands") {
-        savedLocal
-        mainText.textContent = '';
-        //this is me thinking about appending a paragraph of just help information
-        mainText.textContent = "help: displays this page, look: inspects a thing you specify, north or up/south or down/west or left/east or right: moves you in said direction, talk: talk to a person... dismiss this by typing OK"
-        if (userText.value === "OK" || "ok" || "Ok") {
-            mainText.textContent = loadLocal;
-        }
-
+    //savedLocal
+    console.log('what the fuck is happening')
+    mainText.textContent = '';
+    mainText.textContent = "help: displays this page, look: inspects a thing you specify, north or up/south or down/west or left/east or right: moves you in said direction, talk: talk to a person... dismiss this by typing OK"
+    if (userText.value === "OK" || "ok" || "Ok") {
+        //mainText.textContent = lastPos[1];
     }
-
 }
 //save button
 saveBtn.addEventListener('click', function (event) {
