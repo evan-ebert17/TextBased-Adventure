@@ -31,10 +31,17 @@ var loadLocal = localStorage.getItem('save');
 //when player enters a command they will go to a value and it will pull up the corresponding text box
 //to save the game, it just stores this value in localstorage and then whenever player loads, it goes to the last saved value-prompt
 let pIndex = 0;
-var up = + 2;
-var down = - 2;
-var left = + 1;
-var right = - 1;
+const directions = {
+    up: + 2,
+    down: - 2,
+    left: + 1,
+    right: - 1,
+}
+
+var up = directions.up
+var down = directions.down
+var left = directions.left
+var right = directions.right
 
 var savedArray = [];
 var grid = [
@@ -123,7 +130,10 @@ const prompts = {
             disc: 'you are in your home office.'
         },
         hallOffice: {
-            disc: 'you are in the hallway in between your home office and your @@@@'
+            disc: 'you are in the hallway in between your home office and... more hallway!'
+        },
+        hallLiving: {
+            disc: 'you are in the hall that leads out to your living room'
         },
         livingRoom: {
             disc: 'this is your living room.'
@@ -268,7 +278,7 @@ function indexCubeChar() {
 //room position
 
 function commandCheck() {
-    if(userText.value !== `help` || `command` || `commands`|| `inventory` || `map`) {
+    if (userText.value !== `help` || `command` || `commands` || `inventory` || `map`) {
         userText.value = `that's not a command! type !help for available commands.`
     }
 }
@@ -278,27 +288,31 @@ function promptCycling() {
     //additionally, once I am at the new point in the array I can go back and that the position from the array I have choices that I would not have otherwise
     //target roomelVal in the object so that when it reads an objects uniqure roomelVal it sets the text content to whatever that objects room: is.
 
-    if (userText.value === `go up`) {
+    if (userText.value === `go up` || userText.value === `up` || userText.value === `go north` || userText.value === `north`) {
         up + roomPos[0];
         roomPos.push(up + roomPos[0])
         reducedArray = roomPos.reduce((a, b) => (1 * a) + (1 * b))
     }
-    else if (userText.value === `go down`) {
+    else if (userText.value === `go down` || userText.value === `down` || userText.value === `go south` || userText.value === `south`) {
         down + roomPos[0];
         roomPos.push(down + roomPos[0])
         reducedArray = roomPos.reduce((a, b) => (1 * a) + (1 * b))
     }
-    else if (userText.value === `go left`) {
+    else if (userText.value === `go left` || userText.value === `left` || userText.value === `go west` || userText.value === `west`) {
         left + roomPos[0];
         roomPos.push(left + roomPos[0])
         reducedArray = roomPos.reduce((a, b) => (1 * a) + (1 * b))
     }
-    else if (userText.value === `go right`) {
+    else if (userText.value === `go right` || userText.value === `right` || userText.value === `go east` || userText.value === `east`) {
+        if (roomPos === -5 && userText.value === `go right`) {
+            userText.value = `there's a wall there, so try not hitting your head against it next time.`
+        }
         right + roomPos[0];
         roomPos.push(right + roomPos[0])
         reducedArray = roomPos.reduce((a, b) => (1 * a) + (1 * b))
-    }
-    else {
+        //} //else if(userText.value === `go back` || `back`) {
+        //mainText.textContent = LastPara;
+    } else {
         userText.textContent = "that's not a command! type !help for available commands."
     };
 
@@ -336,10 +350,10 @@ function giveMeRoom(roomPos) {
 
 function errorHandling() {
     const roomAreIn = giveMeRoom(reducedArray);
-    if(prompts.housePrompts[roomAreIn].disc === undefined) {
+    if (prompts.housePrompts[roomAreIn].disc === undefined) {
         userText.value = "you ran into a wall, fool"
         return;
-        }
+    }
     //else if(prompts.street[roomAreIn].disc === undefined) {
     //     userText.value = "you ran out of street, fool"
     //     return;
