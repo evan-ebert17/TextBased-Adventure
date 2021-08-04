@@ -66,6 +66,21 @@ h1 {
     color:var(--bgcolor);
 }
 
+.timer {
+    width: 50%;
+    height: 27px; 
+    font-size: 1.75vh;
+    color: var(--fontcolor);
+    background-color: var(--bgcolor);
+    border-style: outset;
+    border-width: 0px 3px 3px 0px;
+    border-color: grey;
+    text-shadow: -1px 1px 0 black,
+                          1px 1px 0 black,
+                         1px -1px 0 black,
+                        -1px -1px 0 black;
+}
+
 div div form button {
     width: 15%;
     vertical-align: bottom;

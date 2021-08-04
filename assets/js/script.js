@@ -12,6 +12,9 @@ var mainText = document.getElementById("maincontent");
 var userText = document.getElementById("textcontent");
 var submitText = document.getElementById("submission");
 
+var userInputMessages = document.getElementById('userInputMessages');
+var userinputDiv = document.getElementById('userInputMessagesDiv');
+
 var inventorycontentText = document.getElementById("inventory");
 var inventoryDiv = document.getElementById("invdiv");
 var inventoryButton = document.getElementById("inventorybutton");
@@ -31,27 +34,25 @@ var loadLocal = localStorage.getItem('save');
 //to save the game, it just stores this value in localstorage and then whenever player loads, it goes to the last saved value-prompt
 let pIndex = 0;
 const directions = {
-    up: + 2,
-    down: - 2,
+    up: + 5,
+    down: - 5,
     left: + 1,
     right: - 1,
 }
 
-var up = directions.up
-var down = directions.down
-var left = directions.left
-var right = directions.right
+var up = directions.up;
+var down = directions.down;
+var left = directions.left;
+var right = directions.right;
 
-var savedArray = [];
 var grid = [
     {
         room: 'bedroom',
         roomelVal: 0,
-        // ifrepeated: 0,
     },
     {
         room: 'bathroom',
-        roomelVal: -2,
+        roomelVal: -5,
     },
     {
         room: 'bedroomStorageHallway',
@@ -59,11 +60,11 @@ var grid = [
     },
     {
         room: 'frontAttic',
-        roomelVal: 4,
+        roomelVal: 7,
     },
     {
         room: 'backAttic',
-        roomelVal: 5,
+        roomelVal: 8,
     },
     {
         room: "storage",
@@ -71,28 +72,27 @@ var grid = [
     },
     {
         room: "office",
-        roomelVal: 3,
-        // ifrepeated: 5,
-    },
-    {
-        room: "hallOffice",
-        roomelVal: -1,
-    },
-    {
-        room: "hallLiving",
         roomelVal: -3,
     },
     {
-        room: "livingRoom",
+        room: "hallOffice",
         roomelVal: -4,
     },
     {
+        room: "hallLiving",
+        roomelVal: -9,
+    },
+    {
+        room: "livingRoom",
+        roomelVal: -10,
+    },
+    {
         room: 'kitchen',
-        roomelVal: -5,
+        roomelVal: -11,
     },
     {
         room: "frontDoor",
-        roomelVal: -6,
+        roomelVal: -15,
     },
 ];
 
@@ -151,12 +151,13 @@ var currentState = {
     locationState: ['house', 'street', 'work', 'lair'],
     inventory: [''],
     //-8 = you're on the street
-    currentMapLocation: [-8, 9, 56],
+    currentMapLocation: [-20, 9, 56],
     currentLocation: [0],
-    lastLocation: []
+    lastLocation: [],
 }
 
 var lastPos = currentState.lastLocation;
+
 function checkLastPosLength() {
     if (lastPos.length > 1 && userText.value !== 'back') {
         lastPos.shift();
@@ -207,7 +208,9 @@ formEl.addEventListener('submit', function (event) {
             pickedUpItem();
         }
         checkLastPosLength();
+        //commandCheck();
         promptCycling();
+        errorHandling();
         const roomAreIn = giveMeRoom(roomPos)
         const housePromptForThisRoom = prompts.housePrompts[roomAreIn].disc
 
@@ -240,6 +243,22 @@ function hideMap() {
     } else {
         mapContent.style.display = "none";
     }
+}
+function timer() {
+
+    var timer = setInterval(function () {
+        var sec = 2;
+        sec--;
+        userInputMessages.className = "timer";
+        if (sec < 0) {
+            clearInterval(timer);
+            userInputMessages.style.visibility = 'hidden';
+        }
+         else {
+            return;
+        }
+    }, 1000);
+    userinputDiv.append(userInputMessages);
 }
 
 //function that states if the user types the command get followed by an item inside the room they are in and it is 'get-able'
@@ -293,20 +312,22 @@ function indexCubeChar() {
 
 function commandCheck() {
     if (userText.value !== `help` || `command` || `commands` || `inventory` || `map`) {
-        userText.value = `that's not a command! type !help for available commands.`
+        console.log('help');
+        userInputMessages.textContent= `that's not a command! type !help for available commands.`
+        timer();
     }
 }
 function back() {
-    if (lastPos[0] === 'up') {
-        roomPos.push(-2 + roomPos[0])
+    if (lastPos[0] === 'up' && userText.value === 'back' || userText.value === 'go back') {
+        roomPos.push(-5 + roomPos[0])
     }
-    if (lastPos[0] === 'down') {
-        roomPos.push(+2 + roomPos[0])
+    if (lastPos[0] === 'down' && userText.value === 'back' || userText.value === 'go back') {
+        roomPos.push(+5 + roomPos[0])
     }
-    if (lastPos[0] === 'left') {
+    if (lastPos[0] === 'left' && userText.value === 'back' || userText.value === 'go back') {
         roomPos.push(-1 + roomPos[0])
     }
-    if (lastPos[0] === 'right') {
+    if (lastPos[0] === 'right' && userText.value === 'back' || userText.value === 'go back') {
         roomPos.push(+1 + roomPos[0])
     }
 }
@@ -318,28 +339,25 @@ function promptCycling() {
     if (userText.value === `go up` || userText.value === `up` || userText.value === `go north` || userText.value === `north`) {
         up + roomPos[0];
         roomPos.push(up + roomPos[0])
-        reducedArray = roomPos.reduce((a, b) => (1 * a) + (1 * b))
+        reducedArray;
         lastPos.push('up')
     }
     else if (userText.value === `go down` || userText.value === `down` || userText.value === `go south` || userText.value === `south`) {
         down + roomPos[0];
         roomPos.push(down + roomPos[0])
-        reducedArray = roomPos.reduce((a, b) => (1 * a) + (1 * b))
+        reducedArray;
         lastPos.push('down')
     }
     else if (userText.value === `go left` || userText.value === `left` || userText.value === `go west` || userText.value === `west`) {
         left + roomPos[0];
         roomPos.push(left + roomPos[0])
-        reducedArray = roomPos.reduce((a, b) => (1 * a) + (1 * b))
+        reducedArray;
         lastPos.push('left')
     }
     else if (userText.value === `go right` || userText.value === `right` || userText.value === `go east` || userText.value === `east`) {
-        if (roomPos === -5 && userText.value === `go right`) {
-            userText.value = `there's a wall there, so try not hitting your head against it next time.`
-        }
         right + roomPos[0];
         roomPos.push(right + roomPos[0])
-        reducedArray = roomPos.reduce((a, b) => (1 * a) + (1 * b))
+        reducedArray;
         lastPos.push('right')
     } else if (userText.value === `go back` || `back`) {
         back();
@@ -356,6 +374,10 @@ function promptCycling() {
         //const streetPrompts = prompts.street[roomAreIn].disc
 
         const housePromptForThisRoom = prompts.housePrompts[roomAreIn].disc
+        if (housePromptForThisRoom == undefined) {
+            housePromptForThisRoom = null;
+            userInputMessages.textContent = 'fhqwhagads';
+        }
         // if (roomPos === currentPrompt.roomelVal) {
         //     mainText.textContent = selectedArrayPos.room;
         // }
@@ -378,8 +400,8 @@ function giveMeRoom(roomPos) {
 
 function errorHandling() {
     const roomAreIn = giveMeRoom(reducedArray);
-    if (prompts.housePrompts[roomAreIn].disc === undefined) {
-        userText.value = "you ran into a wall, fool"
+    if (prompts.housePrompts[roomAreIn].disc == null) {
+        console.log('help') //userText.value = "you ran into a wall, fool"
         return;
     }
     //else if(prompts.street[roomAreIn].disc === undefined) {
@@ -408,4 +430,4 @@ loadBtn.addEventListener('click', function (event) {
     event.preventDefault();
     lastPara = localStorage.getItem('save');
     mainText.textContent = lastPara;
-})
+});
