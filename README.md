@@ -1,7 +1,7 @@
 # TextBased-Adventure
 
-[Github](https://github.com/evan-ebert17/PersonalPortfolioREDUX/)  
-[Deployed React App](https://eeportfolio.herokuapp.com/)
+[Github](https://github.com/evan-ebert17/TextBased-Adventure/)  
+[Deployed Game](https://evan-ebert17.github.io/TextBased-Adventure/)
 
 ## Screen Shots
 ![Text-Based-Adventure-Game](assets/images/cd4559cd554d0dc557cb24b24ea61a44.png)
