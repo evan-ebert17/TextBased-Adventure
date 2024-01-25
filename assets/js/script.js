@@ -114,7 +114,7 @@ const prompts = {
             disc: 'you are in the hall next to the bedroom'
         },
         bathroom: {
-            disc: 'this is your bathroom'
+            disc: 'this is your bathroom, there is a bottle of medicine on the shelf.'
         },
         frontAttic: {
             disc: 'this is the front portion of your attic'
@@ -208,7 +208,7 @@ formEl.addEventListener('submit', function (event) {
             pickedUpItem();
         }
         checkLastPosLength();
-        //commandCheck();
+        search();
         promptCycling();
         errorHandling();
         const roomAreIn = giveMeRoom(roomPos)
@@ -292,10 +292,16 @@ function hideInv() {
 
 mapButton.addEventListener('click', function (event) {
     event.preventDefault();
-    mapContent.classList.add('.map')
-    mapContent.appendChild(houseMap);
-    hideMap();
-    indexCubeChar();
+    if (document.querySelector(".map") !== null) {
+        hideMap();
+        indexCubeChar();
+    }
+    else {
+        mapContent.classList.add('.map')
+        mapContent.appendChild(houseMap);
+        hideMap();
+        indexCubeChar();
+    }
 });
 //basically the "player", it is a cube (a button element) that will track to the players room, therefore displaying the players location on the map
 function indexCubeChar() {
@@ -340,25 +346,25 @@ function promptCycling() {
         up + roomPos[0];
         roomPos.push(up + roomPos[0])
         reducedArray;
-        lastPos.push('up')
+        lastPos.push('up');
     }
     else if (userText.value === `go down` || userText.value === `down` || userText.value === `go south` || userText.value === `south`) {
         down + roomPos[0];
         roomPos.push(down + roomPos[0])
         reducedArray;
-        lastPos.push('down')
+        lastPos.push('down');
     }
     else if (userText.value === `go left` || userText.value === `left` || userText.value === `go west` || userText.value === `west`) {
         left + roomPos[0];
         roomPos.push(left + roomPos[0])
         reducedArray;
-        lastPos.push('left')
+        lastPos.push('left');
     }
     else if (userText.value === `go right` || userText.value === `right` || userText.value === `go east` || userText.value === `east`) {
         right + roomPos[0];
         roomPos.push(right + roomPos[0])
         reducedArray;
-        lastPos.push('right')
+        lastPos.push('right');
     } else if (userText.value === `go back` || `back`) {
         back();
     } else {
@@ -385,7 +391,6 @@ function promptCycling() {
 };
 
 
-
 function giveMeRoom(roomPos) {
     let room;
 
@@ -396,6 +401,12 @@ function giveMeRoom(roomPos) {
     }
     console.log(room)
     return room
+}
+
+function search() {
+    if(userText.value === "search") {
+        console.log("google")
+    }
 }
 
 function errorHandling() {
